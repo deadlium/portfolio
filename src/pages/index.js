@@ -196,9 +196,9 @@ export default function Index() {
               ><EmailIcon /></Link>
             </div>
             <div className='flex flex-col gap-5 md:gap-10 text-6xl md:text-8xl font-black text-gray-600'>
-              <Link href="/" className=''>Home</Link>
-              <Link href="/" className=''>About</Link>
-              <Link href="https://calendly.com/admin-uddeshjaiswal/30min" className=''>Calendly</Link>
+              <Link href="/" className='' onClick={() => setNotification(!notification)}>Home</Link>
+              <Link href="/" className='' onClick={() => setNotification(!notification)}>About</Link>
+              <Link href="https://calendly.com/admin-uddeshjaiswal/30min" className='' onClick={() => setNotification(!notification)}>Calendly</Link>
             </div>
           </div>
         </div>
