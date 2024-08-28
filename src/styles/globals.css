@@ -9,6 +9,11 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  cursor: none;
+}
+
+a {
+  cursor: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +31,7 @@ body {
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
   font-family: "Manrope";
   user-select: none;
+  cursor: none;
 }
 
 @layer utilities {
@@ -51,6 +57,7 @@ button {
   cursor: pointer;
   font-family: inherit;
 }
+
 /* ============================ */
 /* <style for bg> ======== */
 .background {
@@ -65,7 +72,7 @@ button {
 .menu__icon {
   width: 32px;
   height: 32px;
-  padding: 4px;
+  /* padding: 4px;t */
 }
 
 .menu__icon span {
@@ -201,3 +208,14 @@ button {
 }
 
 /* hamburger icon end */
+
+
+/* curser start */
+
+@media (max-width: 768px) {
+  #custom-cursor {
+    display: none;
+  }
+}
+
+/* curser end */
