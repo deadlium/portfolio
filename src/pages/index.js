@@ -99,7 +99,7 @@ export default function Index() {
       <main className='h-screen'>
         <header className='absolute top-0 left-0 right-0 z-50'>
           <nav className='home-container flex justify-between py-8 px-10 md:px-0'>
-            <Link href="/" className='text-lg md:text-xl'>deadlium</Link>
+            <Link href="/" className='text-lg md:text-xl'>deaDlium</Link>
             <button className="background cursor-none" onClick={toggleMenu}>
               <div className={`menu__icon ${isOpen ? 'open' : ''}`}>
                 <span></span>
@@ -116,26 +116,32 @@ export default function Index() {
             <div className='flex flex-row md:flex-col gap-5 justify-center md:justify-end md:h-screen'>
               <Link
                 href="https://github.com/deadlium"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><GitHubIcon /></Link>
               <Link
                 href="https://x.com/deadlium"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><XIcon /></Link>
               <Link
                 href="https://t.me/deadlium"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><TelegramIcon /></Link>
               <Link
-                href="www.linkedin.com/in/uddeshjaiswal"
+                href="https://linkedin.com/in/uddeshjaiswal"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><LinkedInIcon /></Link>
               <Link
-                href="https://www.instagram.com/0xdeadlium?igsh=aXY5b2FtZW1jeG5x"
+                href="https://instagram.com/0xdeadlium"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><InstagramIcon /></Link>
               <Link
                 href="mailto:self@uddeshjaiswal.com"
+                target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><EmailIcon /></Link>
             </div>
