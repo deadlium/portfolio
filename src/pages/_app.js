@@ -1,16 +1,3 @@
-// import { AppCacheProvider } from '@mui/material-nextjs/v13-pagesRouter';
-// import Head from 'next/head';
-
-// export default function App({ Component, pageProps }) {
-//   return (
-//     <AppCacheProvider {...props}>
-//       <Head>
-//         <Component {...pageProps} />
-//       </Head>
-//     </AppCacheProvider>
-//   );
-// }
-
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { AppCacheProvider } from '@mui/material-nextjs/v14-pagesRouter';
