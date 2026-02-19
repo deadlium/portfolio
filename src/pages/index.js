@@ -135,19 +135,14 @@ export default function Index() {
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><LinkedInIcon /></Link>
               <Link
-                href="https://instagram.com/0xdeadlium"
-                target="_blank"
-                className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
-              ><InstagramIcon /></Link>
-              <Link
-                href="mailto:self@uddeshjaiswal.com"
+                href="mailto:hello@uddeshjaiswal.com"
                 target="_blank"
                 className='bg-gray-800 hover:bg-white hover:text-black transition-all duration-500  rounded-full p-2'
               ><EmailIcon /></Link>
             </div>
             <div className='flex flex-col gap-5 md:gap-10 text-6xl md:text-8xl font-black text-gray-600'>
               <Link href="/" className='' onClick={() => toggleMenu}>Home</Link>
-              <Link href="/" className='' onClick={() => toggleMenu}>About</Link>
+              <Link href="https://x.com/deadlium" className='' onClick={() => toggleMenu}>About</Link>
               <Link href="https://calendly.com/admin-uddeshjaiswal/30min" className='' onClick={() => toggleMenu}>Calendly</Link>
             </div>
           </div>
