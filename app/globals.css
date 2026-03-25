@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+
+:root {
+  cursor: none;
+  color-scheme: dark;
+}
+
+a,
+button {
+  cursor: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #151515;
+}
+
+body {
+  background: #151515;
+  color: #e8e5e1;
+  user-select: none;
+  cursor: none;
+  font-family: var(--font-manrope), sans-serif;
+}
