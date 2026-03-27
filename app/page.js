@@ -1,8 +1,9 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { FaTelegramPlane } from "react-icons/fa";
 import { GrLinkedin } from "react-icons/gr";
@@ -42,6 +43,37 @@ const socialLinks = [
   },
 ];
 
+const THEME_STORAGE_KEY = "portfolio-theme";
+const THEME_EVENT_NAME = "portfolio-theme-change";
+
+const getStoredTheme = () => {
+  if (typeof window === "undefined") return "dark";
+
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  return savedTheme === "light" ? "light" : "dark";
+};
+
+const subscribeToTheme = (callback) => {
+  if (typeof window === "undefined") return () => { };
+
+  const handleChange = () => callback();
+
+  window.addEventListener("storage", handleChange);
+  window.addEventListener(THEME_EVENT_NAME, handleChange);
+
+  return () => {
+    window.removeEventListener("storage", handleChange);
+    window.removeEventListener(THEME_EVENT_NAME, handleChange);
+  };
+};
+
+const setStoredTheme = (theme) => {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  window.dispatchEvent(new Event(THEME_EVENT_NAME));
+};
+
 const darkThemeClasses = {
   page: "bg-[#151515] text-[#e8e5e1]",
   border: "border-white/20",
@@ -77,8 +109,16 @@ const lightThemeClasses = {
 };
 
 export default function Home() {
-  const [isDark, setIsDark] = useState(true);
+  const storedTheme = useSyncExternalStore(
+    subscribeToTheme,
+    getStoredTheme,
+    () => "dark"
+  );
+  const isDark = storedTheme === "dark";
   const [isAnimatingTheme, setIsAnimatingTheme] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [bootTheme] = useState(() => getStoredTheme());
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
 
@@ -98,6 +138,33 @@ export default function Home() {
 
     return { x, y, radius };
   };
+
+  useEffect(() => {
+    document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+  }, [isDark]);
+
+  useEffect(() => {
+    document.documentElement.style.colorScheme =
+      bootTheme === "dark" ? "dark" : "light";
+
+    let progress = 0;
+    const intervalId = window.setInterval(() => {
+      progress += progress < 70 ? 9 : progress < 90 ? 4 : 2;
+      const nextValue = Math.min(progress, 100);
+      setLoadingProgress(nextValue);
+
+      if (nextValue === 100) {
+        window.clearInterval(intervalId);
+        window.setTimeout(() => {
+          setIsBooting(false);
+        }, 180);
+      }
+    }, 45);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [bootTheme]);
 
   useEffect(() => {
     const cursor = document.getElementById("custom-cursor");
@@ -164,7 +231,7 @@ export default function Home() {
         duration: 0.7,
         ease: "power2.inOut",
         onComplete: () => {
-          setIsDark(false);
+          setStoredTheme("light");
           gsap.set(overlay, { display: "none" });
           setIsAnimatingTheme(false);
         },
@@ -173,7 +240,7 @@ export default function Home() {
       return;
     }
 
-    setIsDark(true);
+    setStoredTheme("dark");
     gsap.set(overlay, {
       display: "block",
       clipPath: `circle(${radius}px at ${x}px ${y}px)`,
@@ -204,6 +271,7 @@ export default function Home() {
                 <li key={item.label}>
                   <a
                     href={item.href}
+                    target="_blank"
                     className={`transition-colors duration-200 ${item.active ? "text-current" : themeClasses.hover
                       }`}
                   >
@@ -244,6 +312,7 @@ export default function Home() {
                   <li key={item.label}>
                     <a
                       href={item.href}
+                      target="_blank"
                       className={`group inline-flex flex-col pb-1 transition-colors duration-200 ${item.active ? "text-current" : themeClasses.hover
                         }`}
                     >
@@ -275,39 +344,69 @@ export default function Home() {
         </aside>
 
         <main className="flex min-w-0 flex-1 font-extralight tracking-[2px]">
-          <div className="flex w-full flex-col gap-14 px-6 py-12 sm:px-10 sm:py-16 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-stretch lg:gap-12 lg:px-10 lg:py-14 xl:grid-cols-[1.1fr_0.9fr] xl:gap-10 xl:px-16 xl:py-20 2xl:px-20 2xl:py-36">
-            <div className="flex flex-col justify-between gap-14 lg:min-h-full lg:py-2">
-              <div className="flex flex-col">
-                <h1 className="w-fit text-[3.2rem] leading-[0.92] tracking-[0.18em] sm:text-[4.6rem] lg:text-[4.9rem] lg:tracking-[0.12em] xl:text-[6.4rem] 2xl:text-[7.2rem]">
-                  <span className="block text-cursor">UDDESH</span>
-                  <span className="block text-cursor">JAISWAL</span>
-                </h1>
-                <p className={`text-cursor mt-3 text-base tracking-[0.04em] sm:text-lg lg:text-[1.15rem] xl:text-xl ${themeClasses.soft}`}>
-                  Full Stack Developer / Blockchain Developer
-                </p>
-              </div>
-
-              <div className={`text-cursor flex flex-col gap-1 text-lg tracking-[0.04em] sm:text-xl lg:pb-4 lg:text-[1.15rem] xl:text-2xl ${themeClasses.strong}`}>
-                <p>For business inquiries, email me at</p>
-                <Link
-                  href="mailto:hello@uddeshjaiswal.com"
-                  className={`transition-colors duration-200 ${themeClasses.hover}`}
-                >
-                  hello@uddeshjaiswal.com
-                </Link>
-              </div>
+          <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-5 gap-y-14 px-6 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-16 lg:px-10 lg:py-14 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-20 xl:px-16 xl:py-20 2xl:px-20 2xl:py-28">
+            <div className="col-start-1 row-start-1 flex flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start">
+              <h1 className="w-fit text-[2.45rem] leading-[0.92] tracking-[0.12em] sm:text-[4.6rem] lg:text-[4.9rem] lg:tracking-[0.12em] xl:text-[6.4rem] 2xl:text-[7.2rem]">
+                <span className="block text-cursor">UDDESH</span>
+                <span className="block text-cursor">JAISWAL</span>
+              </h1>
+              <p className={`text-cursor mt-3 text-[0.98rem] tracking-[0.04em] sm:text-lg lg:text-[1.15rem] xl:text-xl ${themeClasses.soft}`}>
+                Full Stack Developer
+              </p>
             </div>
 
-            <div className="flex flex-col justify-end lg:min-h-full lg:py-2">
-              <div className="flex flex-col gap-5 lg:mt-auto lg:pb-4 xl:pb-0">
-                <div className={`text-cursor border-b pb-3 text-2xl tracking-[0.08em] sm:text-[1.75rem] lg:text-[2rem] ${themeClasses.aboutBorder}`}>
-                  ABOUT ME
+            <div className="col-start-2 row-start-1 flex justify-end self-start lg:col-start-2 lg:row-start-1 lg:justify-start lg:self-start">
+              {overlay ? (
+                <div className="relative w-32 sm:w-56 lg:w-60 xl:w-[18rem]">
+                  <Image
+                    width={300}
+                    height={360}
+                    alt="ud dark"
+                    src="/ud.png"
+                    className={`h-auto w-full object-cover transition-all duration-500 ${themeClasses === darkThemeClasses
+                      ? "scale-100 opacity-100"
+                      : "absolute inset-0 scale-95 opacity-0"
+                      }`}
+                  />
+                  <Image
+                    width={300}
+                    height={360}
+                    alt="ud color"
+                    src="/ud_color.png"
+                    className={`h-auto w-full object-cover transition-all duration-500 ${themeClasses === lightThemeClasses
+                      ? "scale-100 opacity-100"
+                      : "absolute inset-0 scale-105 opacity-0"
+                      }`}
+                  />
                 </div>
-                <div className={`text-cursor whitespace-pre-line text-base leading-[1.8] tracking-[0.08em] sm:text-lg lg:text-[1rem] xl:text-xl ${themeClasses.body}`}>
-                  {`I’m a blockchain developer focused on building scalable Web3 infrastructure and high-performance systems. I work with Cosmos SDK and explore Solana concepts, developing indexers, sequencers, and custom modules.
-I prefer an engineering-first approach, building core components for better control over performance and security. Beyond blockchain, I’ve built backend APIs, mobile apps, and modern web interfaces.
-I’m passionate about decentralized systems, cross-chain communication, and creating reliable, future-ready technology.`}
-                </div>
+              ) : (
+                <Image
+                  width={300}
+                  height={360}
+                  alt="ud"
+                  src={isDark ? "/ud.png" : "/ud_color.png"}
+                  className="h-auto w-32 object-cover sm:w-56 lg:w-60 xl:w-[18rem]"
+                />
+              )}
+            </div>
+
+            <div className={`text-cursor col-span-2 row-start-2 flex flex-col gap-1 text-lg tracking-[0.04em] sm:text-xl lg:col-span-1 lg:row-start-2 lg:col-start-1 lg:self-end lg:text-[1.15rem] xl:text-2xl ${themeClasses.strong}`}>
+              <p>For business inquiries, email me at</p>
+              <Link
+                href="mailto:hello@uddeshjaiswal.com"
+                target="_blank"
+                className={`transition-colors duration-200 ${themeClasses.hover}`}
+              >
+                hello@uddeshjaiswal.com
+              </Link>
+            </div>
+
+            <div className="col-span-2 row-start-3 flex flex-col gap-5 lg:col-span-1 lg:row-start-2 lg:col-start-2 lg:self-end">
+              <div className={`text-cursor border-b pb-3 text-2xl tracking-[0.08em] sm:text-[1.75rem] lg:text-[2rem] ${themeClasses.aboutBorder}`}>
+                ABOUT ME
+              </div>
+              <div className={`text-cursor whitespace-pre-line text-base leading-[1.8] tracking-[0.08em] sm:text-lg lg:text-[1rem] xl:text-xl ${themeClasses.body}`}>
+                {`Full-stack developer specializing in scalable web applications and high-performance systems. Focused on clean architecture, efficient backend design, and seamless user experiences, I build robust, reliable solutions designed for real-world impact and long-term scalability. 🚀`}
               </div>
             </div>
           </div>
@@ -316,17 +415,73 @@ I’m passionate about decentralized systems, cross-chain communication, and cre
 
       <footer className="flex h-fit w-full px-4 py-3 md:px-6 lg:px-8 xl:px-20">
         <div className={`text-sm tracking-[0.04em] ${themeClasses.soft}`}>
-          &copy; Uddesh Jaiswal
+          &copy; Uddesh Jaiswal / deadlium
         </div>
       </footer>
     </section>
   );
 
   const themeClasses = isDark ? darkThemeClasses : lightThemeClasses;
+  const loaderThemeClasses =
+    bootTheme === "dark" ? darkThemeClasses : lightThemeClasses;
+  const loaderCircumference = 2 * Math.PI * 52;
+  const loaderOffset =
+    loaderCircumference - (loadingProgress / 100) * loaderCircumference;
 
   return (
     <>
-      <div ref={overlayRef} className="pointer-events-none fixed inset-0 z-[9998] hidden overflow-hidden">
+      {isBooting && (
+        <div
+          className={`fixed inset-0 z-10001 flex flex-col items-center justify-center gap-8 transition-colors duration-300 ${loaderThemeClasses.page}`}
+        >
+          <div className="relative flex h-36 w-36 items-center justify-center">
+            <svg
+              className="-rotate-90"
+              width="136"
+              height="136"
+              viewBox="0 0 136 136"
+              aria-hidden="true"
+            >
+              <circle
+                cx="68"
+                cy="68"
+                r="52"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className={loaderThemeClasses.muted}
+              />
+              <circle
+                cx="68"
+                cy="68"
+                r="52"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                className={loaderThemeClasses.strong}
+                style={{
+                  strokeDasharray: loaderCircumference,
+                  strokeDashoffset: loaderOffset,
+                }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-3xl font-light tracking-[0.14em]">
+                {loadingProgress}
+              </span>
+            </div>
+          </div>
+
+          <p
+            className={`text-sm uppercase tracking-[0.4em] ${loaderThemeClasses.soft}`}
+          >
+            Loading
+          </p>
+        </div>
+      )}
+
+      <div ref={overlayRef} className="pointer-events-none fixed inset-0 z-9998 hidden overflow-hidden">
         {renderPageShell(lightThemeClasses, { overlay: true })}
       </div>
 
@@ -335,7 +490,10 @@ I’m passionate about decentralized systems, cross-chain communication, and cre
         className={`pointer-events-none fixed top-0 left-0 z-9999 hidden h-5 w-5 rounded-full mix-blend-difference transition-colors duration-300 md:block ${themeClasses.cursor}`}
       />
 
-      <div className="transition-colors duration-300">
+      <div
+        className={`transition-opacity duration-300 ${isBooting ? "pointer-events-none opacity-0" : "opacity-100"
+          }`}
+      >
         {renderPageShell(themeClasses)}
       </div>
 
@@ -346,7 +504,7 @@ I’m passionate about decentralized systems, cross-chain communication, and cre
         aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
         aria-pressed={!isDark}
         onClick={toggleTheme}
-        className={`fixed right-5 bottom-5 z-[10000] flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur transition-all duration-300 hover:scale-105 ${themeClasses.button} ${isAnimatingTheme ? "pointer-events-none" : ""
+        className={`fixed right-5 bottom-5 z-10000 flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur transition-all duration-300 hover:scale-105 ${themeClasses.button} ${isAnimatingTheme ? "pointer-events-none" : ""
           }`}
       >
         <span className="sr-only">Toggle theme</span>
