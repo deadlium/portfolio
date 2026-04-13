@@ -9,8 +9,9 @@ const manrope = Manrope({
 export const metadata = {
   title: "Uddesh Jaiswal | Blockchain Developer",
   description:
-    "Blockchain developer specializing in Web3 infrastructure, Cosmos SDK, and scalable distributed systems.",
+    "Full Stack Developer and Blockchain developer specializing in Web3 infrastructure, Cosmos SDK, and scalable distributed systems.",
   keywords: [
+    "Full Stack Developer",
     "Blockchain Developer",
     "Cosmos SDK",
     "Web3",
