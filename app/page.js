@@ -259,13 +259,13 @@ export default function Home() {
 
   const renderPageShell = (themeClasses, { overlay = false } = {}) => (
     <section
-      className={`flex min-h-screen w-screen flex-col overflow-x-hidden lg:h-screen lg:overflow-hidden ${themeClasses.page}`}
+      className={`flex h-dvh w-screen flex-col overflow-hidden ${themeClasses.page}`}
     >
-      <header className={`border-b px-4 py-3 lg:hidden ${themeClasses.border}`}>
+      <header className={`shrink-0 border-b px-4 py-3 lg:hidden ${themeClasses.border}`}>
         <div className="flex items-center justify-between gap-4">
           <nav aria-label="Primary">
             <ul
-              className={`flex items-center gap-4 text-[0.62rem] uppercase tracking-[0.22em] sm:gap-6 ${themeClasses.muted}`}
+              className={`flex items-center gap-3 text-[0.58rem] uppercase tracking-[0.18em] sm:gap-5 sm:text-[0.62rem] ${themeClasses.muted}`}
             >
               {navItems.map((item) => (
                 <li key={item.label}>
@@ -298,10 +298,10 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="flex w-full min-w-0 flex-1 flex-col lg:flex-row">
+      <section className="flex min-h-0 w-full min-w-0 flex-1 flex-col lg:flex-row">
         <aside
           data-cursor-scope={overlay ? undefined : "sidebar"}
-          className="hidden h-full shrink-0 lg:block lg:w-55 lg:px-8 lg:py-20 xl:w-62.5 xl:px-12 xl:py-24 2xl:px-20 2xl:py-40"
+          className="hidden h-full shrink-0 lg:block lg:w-55 lg:px-8 lg:py-16 xl:w-62.5 xl:px-12 xl:py-20 2xl:px-20 2xl:py-28"
         >
           <div className="space-y-10 lg:space-y-10 xl:space-y-12">
             <nav aria-label="Primary">
@@ -343,21 +343,21 @@ export default function Home() {
           </div>
         </aside>
 
-        <main className="flex min-w-0 flex-1 font-extralight tracking-[2px]">
-          <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-5 gap-y-14 px-6 py-12 sm:px-10 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-16 lg:px-10 lg:py-14 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-20 xl:px-16 xl:py-20 2xl:px-20 2xl:py-28">
-            <div className="col-start-1 row-start-1 flex flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start">
-              <h1 className="w-fit text-[2.45rem] leading-[0.92] tracking-[0.12em] sm:text-[4.6rem] lg:text-[4.9rem] lg:tracking-[0.12em] xl:text-[6.4rem] 2xl:text-[7.2rem]">
+        <main className="flex min-h-0 min-w-0 flex-1 font-extralight tracking-[2px]">
+          <div className="grid min-h-0 w-full grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_1fr] gap-x-4 gap-y-6 px-5 py-5 sm:px-8 sm:py-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-10 lg:px-10 lg:py-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-14 xl:px-16 xl:py-16 2xl:px-20 2xl:py-20">
+            <div className="col-start-1 row-start-1 flex min-w-0 flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start">
+              <h1 className="w-fit text-[clamp(2rem,8vw,7.2rem)] leading-[0.9] tracking-widest sm:tracking-[0.12em]">
                 <span className="block text-cursor">UDDESH</span>
                 <span className="block text-cursor">JAISWAL</span>
               </h1>
-              <p className={`text-cursor mt-3 text-[0.98rem] tracking-[0.04em] sm:text-lg lg:text-[1.15rem] xl:text-xl ${themeClasses.soft}`}>
-                Full Stack Developer
+              <p className={`text-cursor mt-2 text-[clamp(0.82rem,2.5vw,1.25rem)] tracking-[0.04em] ${themeClasses.soft}`}>
+                Full Stack Developer / Blockchain Developer
               </p>
             </div>
 
             <div className="col-start-2 row-start-1 flex justify-end self-start lg:col-start-2 lg:row-start-1 lg:justify-start lg:self-start">
               {overlay ? (
-                <div className="relative w-32 sm:w-56 lg:w-60 xl:w-[18rem]">
+                <div className="relative w-24 sm:w-36 lg:w-56 xl:w-[18rem]">
                   <Image
                     width={300}
                     height={360}
@@ -385,12 +385,12 @@ export default function Home() {
                   height={360}
                   alt="ud"
                   src={isDark ? "/ud.png" : "/ud_color.png"}
-                  className="h-auto w-32 object-cover sm:w-56 lg:w-60 xl:w-[18rem]"
+                  className="h-auto w-24 object-cover sm:w-36 lg:w-56 xl:w-[18rem]"
                 />
               )}
             </div>
 
-            <div className={`text-cursor col-span-2 row-start-2 flex flex-col gap-1 text-lg tracking-[0.04em] sm:text-xl lg:col-span-1 lg:row-start-2 lg:col-start-1 lg:self-end lg:text-[1.15rem] xl:text-2xl ${themeClasses.strong}`}>
+            <div className={`text-cursor col-span-2 row-start-2 flex flex-col gap-1 text-[clamp(0.9rem,2.4vw,1.45rem)] tracking-[0.04em] lg:col-span-1 lg:row-start-2 lg:col-start-1 lg:self-end ${themeClasses.strong}`}>
               <p>For business inquiries, email me at</p>
               <Link
                 href="mailto:hello@uddeshjaiswal.com"
@@ -401,11 +401,11 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="col-span-2 row-start-3 flex flex-col gap-5 lg:col-span-1 lg:row-start-2 lg:col-start-2 lg:self-end">
-              <div className={`text-cursor border-b pb-3 text-2xl tracking-[0.08em] sm:text-[1.75rem] lg:text-[2rem] ${themeClasses.aboutBorder}`}>
+            <div className="col-span-2 row-start-3 flex min-h-0 flex-col gap-3 self-end lg:col-span-1 lg:row-start-2 lg:col-start-2 lg:self-end">
+              <div className={`text-cursor border-b pb-2 text-[clamp(1.1rem,3vw,2rem)] tracking-[0.08em] ${themeClasses.aboutBorder}`}>
                 ABOUT ME
               </div>
-              <div className={`text-cursor whitespace-pre-line text-base leading-[1.8] tracking-[0.08em] sm:text-lg lg:text-[1rem] xl:text-xl ${themeClasses.body}`}>
+              <div className={`text-cursor whitespace-pre-line text-[clamp(0.78rem,2vw,1.2rem)] leading-normal tracking-[0.06em] ${themeClasses.body}`}>
                 {`Full-stack developer specializing in scalable web applications and high-performance systems. Focused on clean architecture, efficient backend design, and seamless user experiences, I build robust, reliable solutions designed for real-world impact and long-term scalability. 🚀`}
               </div>
             </div>
@@ -413,8 +413,8 @@ export default function Home() {
         </main>
       </section>
 
-      <footer className="flex h-fit w-full px-4 py-3 md:px-6 lg:px-8 xl:px-20">
-        <div className={`text-sm tracking-[0.04em] ${themeClasses.soft}`}>
+      <footer className="flex shrink-0 w-full px-4 py-2 md:px-6 lg:px-8 xl:px-20">
+        <div className={`text-[0.78rem] tracking-[0.04em] sm:text-sm ${themeClasses.soft}`}>
           &copy; Uddesh Jaiswal / deadlium
         </div>
       </footer>
