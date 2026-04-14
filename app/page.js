@@ -204,12 +204,53 @@ export default function Home() {
       element.addEventListener("mouseleave", resetCursor);
     });
 
+    const imageLensCleanups = [];
+    const imageContainers = document.querySelectorAll('.img-lens-container');
+    imageContainers.forEach((container) => {
+      const maskLayer = container.querySelector('.img-mask');
+      if (!maskLayer) return;
+
+      let currentRadius = 0;
+
+      const enter = () => {
+        gsap.to(cursor, { opacity: 0, duration: 0.2 });
+        currentRadius = 20;
+      };
+
+      const leave = (e) => {
+        gsap.to(cursor, { opacity: 1, duration: 0.2 });
+        currentRadius = 0;
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        gsap.to(maskLayer, { clipPath: `circle(0px at ${x}px ${y}px)`, duration: 0.3, ease: 'power2.out' });
+      };
+
+      const move = (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        gsap.to(maskLayer, { clipPath: `circle(${currentRadius}px at ${x}px ${y}px)`, duration: 0.15, ease: 'power2.out' });
+      };
+
+      container.addEventListener('mouseenter', enter);
+      container.addEventListener('mouseleave', leave);
+      container.addEventListener('mousemove', move);
+
+      imageLensCleanups.push(() => {
+        container.removeEventListener('mouseenter', enter);
+        container.removeEventListener('mouseleave', leave);
+        container.removeEventListener('mousemove', move);
+      });
+    });
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       interactiveElements.forEach((element) => {
         element.removeEventListener("mouseenter", growCursor);
         element.removeEventListener("mouseleave", resetCursor);
       });
+      imageLensCleanups.forEach(cleanup => cleanup());
     };
   }, []);
 
@@ -343,54 +384,64 @@ export default function Home() {
           </div>
         </aside>
 
-        <main className="flex min-h-0 min-w-0 flex-1 font-extralight tracking-[2px]">
-          <div className="grid min-h-0 w-full grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_1fr] gap-x-4 gap-y-6 px-5 py-5 sm:px-8 sm:py-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-10 lg:px-10 lg:py-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-14 xl:px-16 xl:py-16 2xl:px-20 2xl:py-20">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto font-extralight tracking-[2px] lg:overflow-hidden">
+          <div className="grid min-h-fit w-full grid-cols-1 grid-rows-[auto_auto_auto_1fr] gap-x-4 gap-y-10 px-5 py-5 sm:px-8 sm:py-6 lg:min-h-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-10 lg:px-10 lg:py-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-14 xl:px-16 xl:py-16 2xl:px-20 2xl:py-20">
             <div className="col-start-1 row-start-1 flex min-w-0 flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start">
               <h1 className="w-fit text-[clamp(2rem,8vw,7.2rem)] leading-[0.9] tracking-widest sm:tracking-[0.12em]">
                 <span className="block text-cursor">UDDESH</span>
                 <span className="block text-cursor">JAISWAL</span>
               </h1>
               <p className={`text-cursor mt-2 text-[clamp(0.82rem,2.5vw,1.25rem)] tracking-[0.04em] ${themeClasses.soft}`}>
-                Full Stack Developer / Blockchain Developer
+                Full Stack Developer
               </p>
             </div>
 
-            <div className="col-start-2 row-start-1 flex justify-end self-start lg:col-start-2 lg:row-start-1 lg:justify-start lg:self-start">
+            <div className="col-start-1 row-start-2 flex justify-start self-start lg:col-start-2 lg:row-start-1 lg:self-start">
               {overlay ? (
-                <div className="relative w-24 sm:w-36 lg:w-56 xl:w-[18rem]">
+                <div className="relative w-[clamp(7rem,min(22vw,30vh),16rem)] lg:w-[clamp(12rem,min(18vw,35vh),20rem)] aspect-5/6 overflow-hidden rounded-sm">
                   <Image
-                    width={300}
-                    height={360}
+                    fill
                     alt="ud dark"
                     src="/ud.png"
-                    className={`h-auto w-full object-cover transition-all duration-500 ${themeClasses === darkThemeClasses
+                    className={`img object-cover transition-all duration-500 ${themeClasses === darkThemeClasses
                       ? "scale-100 opacity-100"
                       : "absolute inset-0 scale-95 opacity-0"
                       }`}
                   />
                   <Image
-                    width={300}
-                    height={360}
+                    fill
                     alt="ud color"
                     src="/ud_color.png"
-                    className={`h-auto w-full object-cover transition-all duration-500 ${themeClasses === lightThemeClasses
+                    className={`img object-cover transition-all duration-500 ${themeClasses === lightThemeClasses
                       ? "scale-100 opacity-100"
                       : "absolute inset-0 scale-105 opacity-0"
                       }`}
                   />
                 </div>
               ) : (
-                <Image
-                  width={300}
-                  height={360}
-                  alt="ud"
-                  src={isDark ? "/ud.png" : "/ud_color.png"}
-                  className="h-auto w-24 object-cover sm:w-36 lg:w-56 xl:w-[18rem]"
-                />
+                <div className="img-lens-container cursor-none relative w-[clamp(7rem,min(22vw,30vh),16rem)] lg:w-[clamp(12rem,min(18vw,35vh),20rem)] aspect-5/6 overflow-hidden rounded-sm">
+                  <Image
+                    fill
+                    alt="ud"
+                    src={isDark ? "/ud.png" : "/ud_color.png"}
+                    className="object-cover"
+                  />
+                  <div 
+                    className="img-mask absolute inset-0 z-10 pointer-events-none"
+                    style={{ clipPath: 'circle(0px at 50% 50%)' }}
+                  >
+                    <Image
+                      fill
+                      alt="ud opposite"
+                      src={isDark ? "/ud_color.png" : "/ud.png"}
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
               )}
             </div>
 
-            <div className={`text-cursor col-span-2 row-start-2 flex flex-col gap-1 text-[clamp(0.9rem,2.4vw,1.45rem)] tracking-[0.04em] lg:col-span-1 lg:row-start-2 lg:col-start-1 lg:self-end ${themeClasses.strong}`}>
+            <div className={`text-cursor col-start-1 row-start-3 flex flex-col gap-1 text-[clamp(0.9rem,2.4vw,1.45rem)] tracking-[0.04em] lg:col-span-1 lg:row-start-2 lg:col-start-1 lg:self-end ${themeClasses.strong}`}>
               <p>For business inquiries, email me at</p>
               <Link
                 href="mailto:hello@uddeshjaiswal.com"
@@ -401,11 +452,11 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="col-span-2 row-start-3 flex min-h-0 flex-col gap-3 self-end lg:col-span-1 lg:row-start-2 lg:col-start-2 lg:self-end">
+            <div className="col-start-1 row-start-4 flex min-h-0 flex-col gap-3 self-end lg:col-span-1 lg:row-start-2 lg:col-start-2 lg:self-end">
               <div className={`text-cursor border-b pb-2 text-[clamp(1.1rem,3vw,2rem)] tracking-[0.08em] ${themeClasses.aboutBorder}`}>
                 ABOUT ME
               </div>
-              <div className={`text-cursor whitespace-pre-line text-[clamp(0.78rem,2vw,1.2rem)] leading-normal tracking-[0.06em] ${themeClasses.body}`}>
+              <div className={`text-cursor whitespace-pre-wrap text-[clamp(0.85rem,1.8vw,1.25rem)] leading-relaxed tracking-[0.05em] ${themeClasses.body}`}>
                 {`Full-stack developer specializing in scalable web applications and high-performance systems. Focused on clean architecture, efficient backend design, and seamless user experiences, I build robust, reliable solutions designed for real-world impact and long-term scalability. 🚀`}
               </div>
             </div>
