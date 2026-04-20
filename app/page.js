@@ -385,8 +385,8 @@ export default function Home() {
         </aside>
 
         <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto font-extralight tracking-[2px] lg:overflow-hidden">
-          <div className="grid min-h-fit w-full grid-cols-1 grid-rows-[auto_auto_auto_1fr] gap-x-4 gap-y-10 px-5 py-5 sm:px-8 sm:py-6 lg:min-h-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-10 lg:px-10 lg:py-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-14 xl:px-16 xl:py-16 2xl:px-20 2xl:py-20">
-            <div className="col-start-1 row-start-1 flex min-w-0 flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start">
+          <div className="grid min-h-fit w-full grid-cols-1 grid-rows-[auto_auto_auto_1fr] gap-x-4 gap-y-6 px-5 py-5 sm:px-8 sm:py-6 lg:min-h-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-10 lg:px-10 lg:py-10 xl:grid-cols-[1.08fr_0.92fr] xl:gap-x-14 xl:gap-y-14 xl:px-16 xl:pt-16 2xl:px-20 2xl:py-20">
+            <div className="col-start-1 row-start-1 flex min-w-0 flex-col self-start lg:col-start-1 lg:row-start-1 lg:self-start ">
               <h1 className="w-fit text-[clamp(2rem,8vw,7.2rem)] leading-[0.9] tracking-widest sm:tracking-[0.12em]">
                 <span className="block text-cursor">UDDESH</span>
                 <span className="block text-cursor">JAISWAL</span>
